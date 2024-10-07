@@ -66,3 +66,32 @@ Delovanje lahko preverite s sledečim programom:
         ADD C, [dolzina]
         CALL uredi          ; pokličemo funkcijo za urejanje
         HLT                 ; prekinemo izvajanje
+
+
+### ostanek:
+
+MOV A, 10
+MOV B, 3
+CALL deljenje
+HLT
+
+deljenje:
+	
+	MOV C, A
+	DIV B
+	MUL B
+	SUB C, A
+	RET
+
+### second task
+
+MOV A, 13
+CALL loop
+
+loop:
+PUSH A
+INC A
+CMP A, 42
+RET
+
+JNE loop
