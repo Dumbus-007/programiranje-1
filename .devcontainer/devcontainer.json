@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // For format details, see https://aka.ms/vscode-remote/devcontainer.json or this file's README at:
 {
 	"name": "Programiranje 1",
@@ -42,3 +43,25 @@
 	// Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
 	// "remoteUser": "vscode"
 }
+=======
+// For format details, see https://aka.ms/vscode-remote/devcontainer.json or this file's README at:
+{
+	"name": "Programiranje 1",
+	// To build a Docker virtual machine locally, comment the "image" line and uncomment
+	// the "build" lines below.
+	"image": "j00sko/programiranje1:latest",
+	// "build": {
+	// 	"dockerfile": "Dockerfile"
+	// },
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ocamllabs.ocaml-platform",
+				"ms-python.vscode-pylance",
+				"ms-toolsai.jupyter"
+			]
+		}
+	},
+	"remoteUser": "opam"
+}
+>>>>>>> dbf48e64a30844a86ce9046975fc5dffb31d3330
