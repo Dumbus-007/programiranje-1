@@ -75,6 +75,9 @@ Delovanje lahko preverite s sledečim programom:
 
 Če vam ostaja čas, poskusite napisati program, ki čim bolj učinkovito računa zaporedna praštevila in jih dodaja na sklad. Programe bomo primerjali po hitrosti in porabljenem prostoru, preizkusili pa jih bomo na simulatorju, ki podpira neomejenim skladom ter števila, večja od 255.
 
+
+## REZULTATI Z VAJ:
+
 ### ostanek:
 
 MOV A, 10
@@ -90,15 +93,13 @@ deljenje:
 	SUB C, A
 	RET
 
-### second task
+### zaporedna števila
 
 MOV A, 13
-CALL loop
 
 loop:
-PUSH A
-INC A
-CMP A, 42
-RET
-
-JNE loop
+	PUSH A
+	INC A
+	CMP A, 43
+	JNE loop
+HLT
