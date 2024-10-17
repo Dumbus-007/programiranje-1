@@ -26,7 +26,7 @@ parts:
   chapters:
   # - file: 01-racunalniska-arhitektura.md
   - file: 02-uvod-v-funkcijsko-programiranje.ipynb
-  # - file: 03-rekurzija.ipynb
+  - file: 03-rekurzija.ipynb
   # - file: 04-algebrajski-tipi.ipynb
   # - file: 05-abstrakcija.md
 # - caption: Dokazovalniki
@@ -42,4 +42,10 @@ parts:
   # - file: 12-dinamicno-programiranje.md
   # - file: 13-01-memoizacija-v-pythonu.md
   # - file: 13-02-memoizacija-v-ocamlu.md
+<<<<<<< HEAD
 >>>>>>> 563fcef635626a6229f5f57b6fec9f6de2e4c063
+=======
+- caption: Domače naloge
+  chapters:
+  - file: dn-1.ipynb
+>>>>>>> 647cad05123e5ee1a62952360459a2f8752faa5d

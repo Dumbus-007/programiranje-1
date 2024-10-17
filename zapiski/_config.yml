@@ -19,4 +19,10 @@ repository:
   book_path: zapiski
   branch: zapiski
 only_build_toc_files: true
+<<<<<<< HEAD
 >>>>>>> 563fcef635626a6229f5f57b6fec9f6de2e4c063
+=======
+execute:
+  exclude_patterns:
+    - 'dn-*.ipynb'
+>>>>>>> 647cad05123e5ee1a62952360459a2f8752faa5d
