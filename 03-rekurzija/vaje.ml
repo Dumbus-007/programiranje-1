@@ -53,7 +53,6 @@ let rec range n =
 let rec map f list = match list with [] -> [] | x :: xs -> f x :: map f xs
 
 (*----------------------------------------------------------------------------*]
-<<<<<<< HEAD
    Časovna zahtevnost operatorja [@] je linearna v prvem argumentu, poskušajte
    napisati reverse tako, da bo bolj učinkovit in hkrati repno rekurziven.
    Pri tem ne smete uporabiti vgrajene funkcije [List.rev] ali [List.rev_append].
@@ -66,14 +65,6 @@ let reverse_boljsi sez =
     | x :: xs -> reverse2 xs (x :: nalozen_kup)
   in
   reverse2 sez []
-=======
- Časovna zahtevnost operatorja [@] je linearna v prvem argumentu, poskušajte 
- napisati reverse_tlrec tako, da bo bolj učinkovit in hkrati repno rekurziven.
- Pri tem ne smete uporabiti vgrajene funkcije [List.rev] ali [List.rev_append].
-[*----------------------------------------------------------------------------*)
-
-let rec reverse_tlrec = ()
->>>>>>> 269fd6f972266c44583e66fa1ded898c5e0ee681
 
 (*----------------------------------------------------------------------------*]
    Funkcija [map_tlrec] je repno rekurzivna različica funkcije [map].
