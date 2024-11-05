@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ---
 jupytext:
   text_representation:
@@ -26,3 +27,25 @@ kernelspec:
 ## Signature
 
 ## Funktorji
+=======
+---
+jupytext:
+  text_representation:
+    extension: .md
+    format_name: myst
+    format_version: 0.12
+    jupytext_version: 1.8.0
+kernelspec:
+  display_name: OCaml 4.11
+  language: OCaml
+  name: ocaml-jupyter
+---
+
+# Modularnost
+
+## Moduli
+
+## Signature
+
+## Funktorji
+>>>>>>> d5398fc631ea65a222792ca4f9f5bb554efffb51
