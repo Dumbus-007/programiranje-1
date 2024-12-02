@@ -36,6 +36,8 @@ inductive Finite : Naravno -> Type where
   | fsucc : {n : Naravno} -> Finite n -> Finite (Naravno.naslednik n)
 
 
+def downcast: a < b -> Finite a -> Finite b
+
 def lookup {A : Type} {n : Naravno} : Vektor A n -> Finite n -> A :=
   fun xs i =>
     match i, xs with
@@ -46,7 +48,7 @@ def lookup {A : Type} {n : Naravno} : Vektor A n -> Finite n -> A :=
 -- Včasih enakost tipov ni takoj očitna in jo moramo izpeljati
 -- Dopolnite naslednjo definicijo, vse potrebne leme pa dokažite kar s taktiko `sorry`.
 
-def stakni_vektorja' : {A : Type} → {m n : Naravno} → Vektor A m → Vektor A n → Vektor A (plus n m) :=
+def plus_zero (n : Naravno) : (plus n Naravno.nic) = n := by
   sorry
 
 def add_c : {m n : Naravno} -> plus m n = plus n m :=
@@ -59,3 +61,36 @@ def stakni_vektorja'' : {A : Type} → {m n : Naravno} → Vektor A m → Vektor
     have xx := stakni_vektorja' xs ys
     rw [add_c] at xx
     exact xx
+def plus_add_suc (m n : Naravno) : (plus m (Naravno.naslednik n)) = (Naravno.naslednik (plus m n)) := by
+  sorry
+
+def plus_comm (m n : Naravno) : (plus m n) = (plus n m) := by
+  sorry
+
+-- xs ys
+-- xs @ ys : Vector A (n + m)
+-- xs @ ys : Vector A (m + n)
+def stakni_vektorja' : {A : Type} → {m n : Naravno} → Vektor A m → Vektor A n → Vektor A (plus n m) :=
+fun {A : Type} {m n : Naravno} (xs : Vektor A m) (ys : Vektor A n) =>
+  match xs with
+    | Vektor.prazen =>
+      by
+        rw [plus_zero]
+        exact ys
+    | Vektor.sestavljen x xs' =>
+      by
+        have aux := Vektor.sestavljen x (stakni_vektorja xs' ys)
+        rw [plus_add_suc, plus_comm]
+        exact aux
+
+
+-- Uporabite samo definicijo `stakni_vektorja'` in taktike `rw` in `exact`.
+def stakni_vektorja'' : {A : Type} → {m n : Naravno} → Vektor A m → Vektor A n → Vektor A (plus m n) :=
+  fun {A : Type} {m n : Naravno} (xs : Vektor A m) (ys : Vektor A n) =>
+    by
+      have aux := stakni_vektorja' xs ys
+      rw [plus_comm]
+      exact aux
+
+
+#print stakni_vektorja''
