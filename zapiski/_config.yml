@@ -25,4 +25,10 @@ only_build_toc_files: true
 execute:
   exclude_patterns:
     - 'dn-*.ipynb'
+<<<<<<< HEAD
 >>>>>>> 647cad05123e5ee1a62952360459a2f8752faa5d
+=======
+sphinx:
+  extra_extensions:
+    - sphinx_proof
+>>>>>>> d531cff0f46630f8b7083d24683cd8cf6d321896
