@@ -26,7 +26,7 @@ by
     rw [ih]
     calc
       2 * (n + 1) + n * (n + 1)
-        = (n + 1) * 2 + (n + 1) * n     := by simp [Nat.mul_comm]
+        = (n + 1) * 2 + (n + 1) * n := by simp [Nat.mul_comm]
         _ = (n+1)* (n+2) := by rw [Nat.mul_add, Nat.add_comm]
 
 
@@ -37,6 +37,10 @@ theorem cisto_pravi_gauss : (n : Nat) → vsota_prvih n = (n * (n + 1)) / 2 := b
   |succ n ih =>
     simp [vsota_prvih]
     rw [ih]
+    -- calc
+    --   n +1 + n * (n+1) / 2
+    --   = 2 * (n+1) / 2 + n * (n+1)/2 := by simp []
+    --   _ = (2 * (n + 1) + n * (n+1)) / 2 := by rw [← add_div]
 
 
 
@@ -73,11 +77,35 @@ def obrni : {A : Type} → {n : Nat} → Vektor A n → Vektor A n :=
   fun vec =>
   pomozna_za_obrni vec Vektor.prazen
 
-def glava : sorry :=
-  sorry
+-- v navodilih piše, da vračamo glavo in rep _seznama_. Če je bilo mišljeno
+-- zares na seznamih, potem sta to tidve funkciji:
 
-def rep : sorry :=
-  sorry
+def glava' : {A: Type} -> List A -> Option A :=
+  fun sez =>
+  match sez with
+  |[] => none
+  |x::_ => some x
+
+def rep' : {A: Type} -> List A -> Option (List A) :=
+  fun sez =>
+  match sez with
+  |[] => none
+  |_::xs => some xs
+
+-- Če pa gre za napako in bi moralo pisati _vektor_ (ker smo namreč v
+-- podpoglavju vektorjev), pa sta to potem tidve funkciji:
+
+def glava : {A : Type} → {n : Nat} → Vektor A n → Option A :=
+fun vec =>
+match vec with
+| .prazen => none
+| .sestavljen x _ => some x
+
+def rep : {A : Type} → {n : Nat} → Vektor A n → Option (Vektor A (n - 1)) :=
+fun vec =>
+match vec with
+| .prazen => none
+| .sestavljen _ xs => some xs
 
 /------------------------------------------------------------------------------
  ## Predikatni račun
@@ -90,17 +118,34 @@ def rep : sorry :=
 
 theorem forall_implies : {A : Type} → {P Q : A → Prop} →
   (∀ x, (P x → Q x)) → (∀ x, P x) → (∀ x, Q x) := by
-  sorry
+  intro x P Q h1 h2
+  intro x
+  apply h1
+  apply h2
 
 theorem forall_implies' : {A : Type} → {P : Prop} → {Q : A → Prop} →
   (∀ x, (P → Q x)) ↔ (P → ∀ x, Q x) := by
-  sorry
+  intros x P Q
+  constructor
+  intro h1
+  intro P x
+  apply h1
+  exact P
+
+  intro h2
+  intro x P
+  apply h2
+  exact P
+
 
 theorem paradoks_pivca :
   {G : Type} → {P : G → Prop} →
   (g : G) →  -- (g : G) pove, da je v gostilni vsaj en gost
   ∃ (p : G), (P p → ∀ (x : G), P x) := by
-  sorry
+  intro G P g
+  exists g
+  intro H_g_pije x
+  -- fomck
 
 /------------------------------------------------------------------------------
  ## Dvojiška drevesa
@@ -141,14 +186,50 @@ def elementi' : {A : Type} → Drevo A → List A :=
 theorem zrcali_zrcali :
   {A : Type} → (t : Drevo A) →
   zrcali (zrcali t) = t := by
-  sorry
+  intro A t
+  induction t with
+  | prazno => simp [zrcali]
+  | sestavljeno l g d leva_ih desna_ih =>
+    simp [zrcali]
+    constructor
+    apply leva_ih
+    apply desna_ih
 
 theorem visina_zrcali :
   {A : Type} → (t : Drevo A) →
   visina (zrcali t) = visina t := by
-  sorry
+  intro A t
+  induction t with
+  | prazno => simp [zrcali]
+  | sestavljeno l g d leva_ih desna_ih =>
+  simp [visina]
+  rw [leva_ih, desna_ih]
+  rw [Nat.max_comm]
+
+
+theorem za_vsak_acc_v_aux: {A: Type} -> (t:Drevo A) -> (acc1 acc2: List A) ->
+  elementi'.aux t (acc1 ++ acc2) = elementi'.aux t acc1 ++ acc2 := by
+  intros A t
+  induction t with
+  |prazno =>
+    intro acc1 acc2
+    simp [elementi'.aux]
+  |sestavljeno l x d leva_ih desna_ih =>
+  intro acc1 acc2
+  simp [elementi'.aux]
+  rw [desna_ih]
+  rw [← leva_ih]
+  rfl
 
 theorem elementi_elementi' :
   {A : Type} → (t : Drevo A) →
   elementi t = elementi' t := by
-  sorry
+  intro A t
+  induction t with
+  |prazno => simp [elementi, elementi', elementi'.aux]
+  |sestavljeno l x d leva_ih desna_ih =>
+  simp [elementi, elementi', elementi'.aux]
+  rw [leva_ih, desna_ih]
+  simp [elementi', elementi'.aux]
+  rw [← za_vsak_acc_v_aux]
+  rfl
