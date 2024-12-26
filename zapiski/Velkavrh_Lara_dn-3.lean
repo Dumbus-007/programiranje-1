@@ -1,5 +1,4 @@
 set_option autoImplicit false
-
 /------------------------------------------------------------------------------
  ## Naravna števila
 
@@ -27,7 +26,7 @@ by
     calc
       2 * (n + 1) + n * (n + 1)
         = (n + 1) * 2 + (n + 1) * n := by simp [Nat.mul_comm]
-        _ = (n+1)* (n+2) := by rw [Nat.mul_add, Nat.add_comm]
+        _ = (n+1) * (n+2) := by rw [Nat.mul_add, Nat.add_comm]
 
 
 theorem cisto_pravi_gauss : (n : Nat) → vsota_prvih n = (n * (n + 1)) / 2 := by
@@ -37,13 +36,15 @@ theorem cisto_pravi_gauss : (n : Nat) → vsota_prvih n = (n * (n + 1)) / 2 := b
   |succ n ih =>
     simp [vsota_prvih]
     rw [ih]
-    -- calc
-    --   n +1 + n * (n+1) / 2
-    --   = 2 * (n+1) / 2 + n * (n+1)/2 := by simp []
-    --   _ = (2 * (n + 1) + n * (n+1)) / 2 := by rw [← add_div]
-
-
-
+    calc
+      n + 1 + n * (n+1) / 2
+      = (2 * (n + 1) + n * (n+1)) / 2 := by
+        rw [← Nat.mul_add_div]
+        apply Nat.two_pos
+      _= (n + 2) * (n + 1) / 2 := by
+        rw [Nat.add_mul, Nat.mul_comm, Nat.add_comm]
+      _= (n + 1) * (n + 2) / 2 := by
+        rw [Nat.mul_comm]
 
 /------------------------------------------------------------------------------
  ## Vektorji
@@ -66,45 +67,24 @@ def stakni : {A : Type} → {m n : Nat} → Vektor A m → Vektor A n → Vektor
   | .prazen => by rw [Nat.add_comm]; exact ys
   | .sestavljen x xs' => by rw [Nat.add_right_comm]; exact Vektor.sestavljen x (stakni xs' ys)
 
-def pomozna_za_obrni: {A: Type} -> {m n : Nat} -> Vektor A m -> Vektor A n -> Vektor A (m+n) :=
-fun vec acc =>
-  match vec with
-  |.prazen => by rw [Nat.add_comm]; exact acc
-  |.sestavljen x xs => pomozna_za_obrni xs (Vektor.sestavljen x acc)
-
 
 def obrni : {A : Type} → {n : Nat} → Vektor A n → Vektor A n :=
   fun vec =>
-  pomozna_za_obrni vec Vektor.prazen
+  match vec with
+  |.prazen => Vektor.prazen
+  |.sestavljen x xs => stakni (obrni xs) (Vektor.sestavljen x (Vektor.prazen))
 
--- v navodilih piše, da vračamo glavo in rep _seznama_. Če je bilo mišljeno
--- zares na seznamih, potem sta to tidve funkciji:
+-- Predvidevam, da gre za mini napako v navodilih zgoraj in bi moralo pisati,
+--da vračamo glavo in rep _vektorja_, zato:
 
-def glava' : {A: Type} -> List A -> Option A :=
-  fun sez =>
-  match sez with
-  |[] => none
-  |x::_ => some x
-
-def rep' : {A: Type} -> List A -> Option (List A) :=
-  fun sez =>
-  match sez with
-  |[] => none
-  |_::xs => some xs
-
--- Če pa gre za napako in bi moralo pisati _vektor_ (ker smo namreč v
--- podpoglavju vektorjev), pa sta to potem tidve funkciji:
-
-def glava : {A : Type} → {n : Nat} → Vektor A n → Option A :=
+def glava : {A : Type} → {n : Nat} → Vektor A (n+1) → A :=
 fun vec =>
 match vec with
-| .prazen => none
-| .sestavljen x _ => some x
+| .sestavljen x _ => x
 
-def rep : {A : Type} → {n : Nat} → Vektor A n → Option (Vektor A (n - 1)) :=
+def rep : {A : Type} → {n : Nat} → Vektor A (n + 1) → Option (Vektor A n) :=
 fun vec =>
 match vec with
-| .prazen => none
 | .sestavljen _ xs => some xs
 
 /------------------------------------------------------------------------------
@@ -137,15 +117,27 @@ theorem forall_implies' : {A : Type} → {P : Prop} → {Q : A → Prop} →
   apply h2
   exact P
 
-
 theorem paradoks_pivca :
   {G : Type} → {P : G → Prop} →
   (g : G) →  -- (g : G) pove, da je v gostilni vsaj en gost
-  ∃ (p : G), (P p → ∀ (x : G), P x) := by
-  intro G P g
-  exists g
-  intro H_g_pije x
-  -- fomck
+  ∃ (p : G), (P p → ∀ (x : G), P x) :=
+  by
+    intro G P g
+    have hypothesis := Classical.forall_or_exists_not P
+    cases hypothesis with
+    |inl h1 =>
+      exists g
+      intro g_pije
+      intro x
+      exact h1 x
+    |inr h2 =>
+      apply Exists.elim h2
+      intro a
+      intro a_ne_pije
+      exists a
+      intro a_pije
+      contradiction
+
 
 /------------------------------------------------------------------------------
  ## Dvojiška drevesa
