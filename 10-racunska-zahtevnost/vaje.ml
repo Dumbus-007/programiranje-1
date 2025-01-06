@@ -27,6 +27,8 @@ let rec insert : 'a -> 'a list -> 'a list =
    Prazen seznam je že urejen. Funkcija [insert_sort] uredi seznam tako da
    zaporedoma vstavlja vse elemente seznama v prazen seznam.
   [*----------------------------------------------------------------------------*)
+let rec insert_sort sez acc =
+  match sez with [] -> acc | x :: xs -> insert_sort xs (insert x acc)
 
 (*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*]
    Urejanje z Izbiranjem
@@ -38,13 +40,16 @@ let rec insert : 'a -> 'a list -> 'a list =
    zaporedoma prenašamo najmanjši element neurejenega podseznama v urejen
    podseznam, dokler ne uredimo vseh.
 
-   Če pričnemo z praznim urejenim podseznamom, vemo, da so na vsakem koraku vsi
+   Če pričnemo s praznim urejenim podseznamom, vemo, da so na vsakem koraku vsi
    elementi neurejenega podseznama večji ali enaki elementom urejenega podseznama,
    saj vedno prenesemo najmanjšega. Tako vemo, da moramo naslednji najmanjši člen
    dodati na konec urejenega podseznama.
    (Hitreje je obrniti vrstni red seznama kot na vsakem koraku uporabiti [@].)
   [*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*)
-
+(* let rec uredi_z_izbiranjem urejen neurejen =
+   match neurejen with
+   |[] -> urejen
+   |x::xs -> iščem minimum, ga dodam na konec urejenega *)
 (*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*]
    Urejanje z Izbiranjem na Tabelah
   [*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*)
@@ -71,17 +76,35 @@ let rec insert : 'a -> 'a list -> 'a list =
    # test;;
    - : int array = [|0; 4; 2; 3; 1|]
   [*----------------------------------------------------------------------------*)
+let swap a i j =
+  let temp = a.(i) in
+  a.(i) <- a.(j);
+  a.(j) <- temp
 
 (*----------------------------------------------------------------------------*]
    Funkcija [index_min a lower upper] poišče indeks najmanjšega elementa tabele
    [a] med indeksoma [lower] and [upper] (oba indeksa sta vključena).
    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-   index_min [|0; 2; 9; 3; 6|] 2 4 = 4
+   index_min [|0; 2; 9; 3; 6|] 2 4 = 3
   [*----------------------------------------------------------------------------*)
+let index_min a lower upper =
+  let min_index = ref lower in
+  for i = lower + 1 to upper do
+    if a.(i) < a.(!min_index) then min_index := i
+  done;
+  !min_index
 
 (*----------------------------------------------------------------------------*]
    Funkcija [selection_sort_array] implementira urejanje z izbiranjem na mestu.
   [*----------------------------------------------------------------------------*)
+let selection_sort_array a =
+  for i = 0 to Array.length a - 1 do
+    let boundary_sorted = i in
+    let j =
+      index_min a boundary_sorted (Array.length a - boundary_sorted - 1)
+    in
+    swap a i j
+  done
 
 (*----------------------------------------------------------------------------*]
    Funkcija [min_and_rest list] vrne par [Some (z, list')] tako da je [z]
